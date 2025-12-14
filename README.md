@@ -1,6 +1,6 @@
 # Introduction
 
-The goal of this tutorial is to set up a homelab for preparing the **CKA exam**.  
+The goal of this tutorial is to set up a homelab on a Fedora 43 machine for preparing the **CKA exam**.  
 
 ## Useful resources
 
@@ -25,3 +25,8 @@ While **kubectl** handles all exam-required operations (e.g., kubectl apply -f, 
 ## Limitations
 
 k3d uses lightweight k3s, skipping full **kubeadm** bootstrapping or advanced **HA** (High-Availability) setups rarely tested in CKA.  
+
+---
+
+# 1. Installing Docker on Fedora 43
+
