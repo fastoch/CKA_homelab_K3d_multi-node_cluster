@@ -30,3 +30,14 @@ k3d uses lightweight k3s, skipping full **kubeadm** bootstrapping or advanced **
 
 # 1. Installing Docker on Fedora 43
 
+- check if docker is already installed: `docker version`
+- if not, add the docker repo, install docker components, enable docker service, and add your user to the docker group:
+```bash
+sudo dnf config-manager addrepo --from-repofile=https://download.docker.com/linux/fedora/docker-ce.repo
+sudo dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo systemctl enable --now docker
+sudo usermod -aG docker $USER
+```
+- Log out and back in for group changes.
+- Verify installation with `docker version`.​
+
