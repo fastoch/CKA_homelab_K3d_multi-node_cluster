@@ -106,7 +106,7 @@ We've created a cluster and deployed our first application to it. Now, let's lea
 
 To create a multi-node cluster with 1 control plane and 2 worker nodes:
 ```bash
-k3d cluster create multinode-cluster --servers 1 --agents 2
+k3d cluster create multinode --servers 1 --agents 2
 ```
 **Reminder**:
 - server node = control plane
@@ -128,11 +128,43 @@ docker ps
 
 To add a worker node to an existing cluster: 
 ```bash
-k3d node create new-worker --cluster multinode-cluster --role agent
+k3d node create new-worker --cluster multinode --role agent
 ```
 
 To remove a specific worker node from a cluster:
 ```bash
 kubectl get nodes
-k3d node delete k3d-multinode-cluster-agent-1
+k3d node delete k3d-multinode-agent-1
 ```
+
+# Aligning client and server version
+
+If you've installed the latest version of kubectl (currently 1.34.2), and then run `k3d cluster create multinode --servers 1 --agents 2`, 
+the default server version bundled with k3d won't match. You can see that when running `kubectl version`:
+```batch
+kubectl version  
+Client Version: v1.34.2
+Kustomize Version: v5.7.1
+Server Version: v1.31.5+k3s1
+Warning: version difference between client (1.34) and server (1.31) exceeds the supported minor version skew of +/-1
+```
+
+The thing is that k3d doesn't support in-place upgrades of existing K3s server versions.  
+We need to recreate the cluster with a compatible K3s image to match our kubectl client version.  
+
+First, run the following cmd to check available versions and find the latest:
+```bash
+sudo k3d version list k3s
+```
+
+Then, delete the current cluster:
+```bash
+k3d cluster delete multinode
+```
+
+And recreate it by specifying the latest image version:
+```bash
+k3d cluster create multinode --image rancher/k3s:v1.34.2-k3s1 --servers 1 --agents 2
+```
+
+Finally, run `kubectl version` to confirm no skew warning.
